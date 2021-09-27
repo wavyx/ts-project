@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  ts-project:
+    build:
+      context: .
+      target: base
+      args:
+        BUILD_NUMBER_CI: dev
+    command: npm run watch
+    container_name: ts-project
+    environment:
+      APP_PORT: 80
+      LOG_LABELS: 'true'
+      LOG_LEVEL: debug
+      WORKER_ON: 1
+    networks:
+      ts-network: {}
+    ports:
+      - published: 33105
+        target: 80
+    volumes:
+      - ./config:/application/config:rw
+      - /application/node_modules
+      - ./package-lock.json:/application/package-lock.json:rw
+      - ./package.json:/application/package.json:rw
+      - ./src:/application/src:rw
+      - ./test:/application/test:rw
+
+networks:
+  ts-network: {}
